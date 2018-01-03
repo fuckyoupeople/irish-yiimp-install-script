@@ -1,0 +1,26 @@
+apt-get update
+apt-get install git
+
+git clone https://github.com/lkloon123/yiimp_install_scrypt.git
+
+***STOP apache service
+sudo apachectl stop
+
+cd yiimp_install_scrypt && bash install.sh
+
+apt-get install nano
+db user&pass : ~/.my.cnf
+
+***UPDATE DB to avoid segwit error
+ALTER TABLE `blocks` ADD `segwit` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `txhash`;
+ALTER TABLE `coins` ADD `usesegwit` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `usememorypool`;
+
+***run frontend
+bash /var/web/main.sh
+bash /var/web/loop2.sh
+bash /var/web/blocks.sh
+
+***run stratum
+
+bash /var/stratum/bash run.sh ***algo***
+
