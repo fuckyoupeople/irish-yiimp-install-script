@@ -56,15 +56,17 @@ output ""
     sudo service nginx start
     # sudo service cron start
     # Making Nginx a bit hard
-    echo 'map $http_user_agent $blockedagent {
+    sudo nano /etc/nginx/useragent.rules
+    map $http_user_agent $fuckingagent {
 default         0;
 ~*malicious     1;
 ~*bot           1;
 ~*backdoor      1;
-~*crawler       1;
-~*bandit        1;
+~*netcrawler    1;
+~*webbandit     1;
+~*bandit	1;
+~*crawler	1; 
 }
-' | sudo -E tee /etc/nginx/blockuseragents.rules >/dev/null 2>&1
         
     output "Installing Mariadb Server."
     output ""
@@ -531,7 +533,7 @@ define('"'"'EXCH_YOBIT_SECRET'"'"', '"'"''"'"');
     output "Generating a basic serverconfig.php"
     output ""
     # make config file
-echo '
+sudo nano /var/web/serverconfig.php
 <?php
 ini_set('"'"'date.timezone'"'"', '"'"'UTC'"'"');
 define('"'"'YAAMP_LOGS'"'"', '"'"'/var/log'"'"');
@@ -544,26 +546,26 @@ define('"'"'YAAMP_DBPASSWORD'"'"', '"'"''"${password}"''"'"');
 define('"'"'YAAMP_PRODUCTION'"'"', true);
 define('"'"'YAAMP_RENTAL'"'"', true);
 define('"'"'YAAMP_LIMIT_ESTIMATE'"'"', false);
-define('"'"'YAAMP_FEES_MINING'"'"', 0.5);
+define('"'"'YAAMP_FEES_MINING'"'"', 1);
 define('"'"'YAAMP_FEES_EXCHANGE'"'"', 2);
 define('"'"'YAAMP_FEES_RENTING'"'"', 2);
 define('"'"'YAAMP_TXFEE_RENTING_WD'"'"', 0.002);
-define('"'"'YAAMP_PAYMENTS_FREQ'"'"', 3*60*60);
-define('"'"'YAAMP_PAYMENTS_MINI'"'"', 0.001);
-define('"'"'YAAMP_ALLOW_EXCHANGE'"'"', false);
+define('"'"'YAAMP_PAYMENTS_FREQ'"'"', 8*60*60);
+define('"'"'YAAMP_PAYMENTS_MINI'"'"', 0.00333);
+define('"'"'YAAMP_ALLOW_EXCHANGE'"'"', true);
 define('"'"'YIIMP_PUBLIC_EXPLORER'"'"', true);
-define('"'"'YIIMP_PUBLIC_BENCHMARK'"'"', false);
+define('"'"'YIIMP_PUBLIC_BENCHMARK'"'"', true);
 define('"'"'YIIMP_FIAT_ALTERNATIVE'"'"', '"'"'USD'"'"'); // USD is main
 define('"'"'YAAMP_USE_NICEHASH_API'"'"', false);
-define('"'"'YAAMP_BTCADDRESS'"'"', '"'"'1HUruZMcSben39E27cyLwsTrk6bbWZs3po'"'"');
+define('"'"'YAAMP_BTCADDRESS'"'"', '"'"'199Ki8SmeY8B8PSh1uvUA1oNyRdwcbcGwW'"'"');
 define('"'"'YAAMP_SITE_URL'"'"', '"'"''"${server_name}"''"'"');
 define('"'"'YAAMP_STRATUM_URL'"'"', YAAMP_SITE_URL); // change if your stratum server is on a different host
-define('"'"'YAAMP_SITE_NAME'"'"', '"'"'TheCryptoPool'"'"');
+define('"'"'YAAMP_SITE_NAME'"'"', '"'"'Shamrocks-n-Shilleighlies_Pool'"'"');
 define('"'"'YAAMP_ADMIN_EMAIL'"'"', '"'"''"${EMAIL}"''"'"');
-define('"'"'YAAMP_ADMIN_IP'"'"', '"'"''"${Public}"''"'"'); // samples: "80.236.118.26,90.234.221.11" or "10.0.0.1/8"
+define('"'"'YAAMP_ADMIN_IP'"'"', '"'"''"${Public}"''"'"'); // samples: "24.217.124.96,108.206.221.4" or "10.24.96.3/8"
 define('"'"'YAAMP_ADMIN_WEBCONSOLE'"'"', true);
 define('"'"'YAAMP_NOTIFY_NEW_COINS'"'"', true);
-define('"'"'YAAMP_DEFAULT_ALGO'"'"', '"'"'x11'"'"');
+define('"'"'YAAMP_DEFAULT_ALGO'"'"', '"'"'neo'"'"');
 define('"'"'YAAMP_USE_NGINX'"'"', true);
 // Exchange public keys (private keys are in a separate config file)
 define('"'"'EXCH_CRYPTOPIA_KEY'"'"', '"'"''"'"');
@@ -584,12 +586,12 @@ define('"'"'EXCH_NOVA_KEY'"'"', '"'"''"'"');
 // Automatic withdraw to Yaamp btc wallet if btc balance > 0.3
 define('"'"'EXCH_AUTO_WITHDRAW'"'"', 0.3);
 // nicehash keys deposit account & amount to deposit at a time
-define('"'"'NICEHASH_API_KEY'"'"','"'"'521c254d-8cc7-4319-83d2-ac6c604b5b49'"'"');
-define('"'"'NICEHASH_API_ID'"'"','"'"'9205'"'"');
-define('"'"'NICEHASH_DEPOSIT'"'"','"'"'3J9tapPoFCtouAZH7Th8HAPsD8aoykEHzk'"'"');
-define('"'"'NICEHASH_DEPOSIT_AMOUNT'"'"','"'"'0.01'"'"');
+define('"'"'NICEHASH_API_KEY'"'"','"'"'000000000-0000-0000-0000-000000000000'"'"');
+define('"'"'NICEHASH_API_ID'"'"','"'"'0000'"'"');
+define('"'"'NICEHASH_DEPOSIT'"'"','"'"'000000000000000000000000000000000000'"'"');
+define('"'"'NICEHASH_DEPOSIT_AMOUNT'"'"','"'"'100.000'"'"');
 $cold_wallet_table = array(
-	'"'"'1KuE2LMZMPXJ4gsVniWLuyyPsqqZs5Av4y'"'"' => 0.10,
+	'"'"'199Ki8SmeY8B8PSh1uvUA1oNyRdwcbcGwW'"'"' => 0.10,
 );
 // Sample fixed pool fees
 $configFixedPoolFees = array(
@@ -599,13 +601,12 @@ $configFixedPoolFees = array(
 );
 // Sample custom stratum ports
 $configCustomPorts = array(
-//	'"'"'neo'"'"' => 7000,
+#	'"'"'neo'"'"' => 7000,
 );
 // mBTC Coefs per algo (default is 1.0)
 $configAlgoNormCoef = array(
-//	'"'"'neo'"'"' => 5.0,
+#	'"'"'neo'"'"' => 5.0,
 );
-' | sudo -E tee /var/web/serverconfig.php >/dev/null 2>&1
 
 output "Updating stratum config files with database connection info."
 output ""
