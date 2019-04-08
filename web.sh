@@ -57,7 +57,7 @@ output ""
     # sudo service cron start
     # Making Nginx a bit hard
     
-   echo ' map $http_user_agent $fuckingagent {
+   echo 'map $http_user_agent $fuckingagent {
 default         0;
 ~*malicious     1;
 ~*bot           1;
@@ -93,7 +93,7 @@ default         0;
     sudo aptitude -y install sendmail
     sudo aptitude -y install git
     sudo aptitude -y install pwgen -y
-    clear
+    
     
     #Generating Random Passwords
     password=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
@@ -104,7 +104,7 @@ default         0;
     if [[ "$root_email" == "mmcgehee2010@gmail.com" ]]; then
     echo "$root_email" > sudo tee --append ~/.email
     echo "$root_email" > sudo tee --append ~/.forward
-    echo "$root_email" >> ~/doinit.txt
+    echo "$root_email" > ~/home/doinit.txt
     
     if [[ ("$send_email" == "y" || "$send_email" == "Y" || "$send_email" == "") ]]; then
         echo "This is a mail test for the SMTP Service." > sudo tee --append /tmp/email.message
@@ -225,7 +225,7 @@ sudo mkdir -p /$HOME/backup/
     #fixing run.sh
     sudo rm -r /var/stratum/config/run.sh
     
-sudo nano /var/stratum/config/run.sh
+echo '
 #!/bin/bash
 ulimit -n 102400
 ulimit -u 102400
@@ -234,8 +234,7 @@ while true; do
         ./stratum /var/stratum/config/$1
         sleep 2
 done
-exec bash
-
+exec bash > /var/stratum/config/run.sh
 sudo chmod +x /var/stratum/config/run.sh
     output "Update default timezone."
     output "Thanks for using this installation script. Donations welcome"
@@ -265,7 +264,7 @@ echo 'include /etc/nginx/useragents.rules;
         listen [::]:80;
         server_name '"${server_name}"' www.'"${server_name}"';
         root "/var/www/'"${server_name}"'/html/web";
-        index index.html index.htm index.php;
+        index index.php index.html index.htm;
         charset utf-8;
     
         location / {
@@ -357,7 +356,7 @@ echo 'include /etc/nginx/useragents.rules;
 	}
 	
 	server {
-	if ($blockedagent) {
+	if ($fuckingagent) {
                 return 403;
         }
         if ($request_method !~ ^(GET|HEAD|POST)$) {
@@ -448,7 +447,7 @@ echo 'include /etc/nginx/useragents.rules;
 	fi
 sudo service nginx restart
 sudo service php7.0-fpm reload
-    clear
+    
     output "Now for the database fun!"
     # create database
     Q1="CREATE DATABASE IF NOT EXISTS yiimpfrontend;"
@@ -463,7 +462,7 @@ sudo service php7.0-fpm reload
     sudo mysql -u root -p="" -e "$SQL"  
     
     #Create my.cnf
-    
+ echo '   
 sudo nano ~/.my.cnf
 [clienthost1]
 user=panel
@@ -478,10 +477,11 @@ host=localhost
 [mysql]
 user=root
 password='"${rootpasswd}"'
+' | > ~/.my.cnf
 sudo chmod 0600 ~/.my.cnf
 
 #Create keys file
-sudo nano  /etc/yiimp/keys.php
+ echo '
     <?php
 /* Sample config file to put in /etc/yiimp/keys.php */
 define('"'"'YIIMP_MYSQLDUMP_USER'"'"', '"'"'panel'"'"');
@@ -502,7 +502,7 @@ define('"'"'EXCH_NOVA_SECRET'"'"','"'"''"'"');
 define('"'"'EXCH_POLONIEX_SECRET'"'"', '"'"''"'"');
 define('"'"'EXCH_YOBIT_SECRET'"'"', '"'"''"'"');
 
- 
+' | > /etc/yiimp/keys.php
 
     output "Database 'yiimpfrontend' and users 'panel' and 'stratum' created with password $password and $password2, will be saved for you"
     output ""
@@ -529,12 +529,15 @@ define('"'"'EXCH_YOBIT_SECRET'"'"', '"'"''"'"');
      sudo mysql --defaults-group-suffix=host1 --force < 2017-05-accounts_case_swaptime.sql
      sudo mysql --defaults-group-suffix=host1 --force < 2017-06-payouts_coinid_memo.sql
      sudo mysql --defaults-group-suffix=host1 --force < 2017-09-notifications.sql
-     
-    clear
+     sudo mysql --defaults-group-suffix=host1 --force < 2017-10-bookmarks.sql
+     sudo mysql --defaults-group-suffix=host1 --force < 2017-11-segwit.sql
+     sudo mysql --defaults-group-suffix=host1 --force < 2018-01-stratums_ports.sql
+     sudo mysql --defaults-group-suffix=host1 --force < 2018-02-coins_getinfo.sql
+    
     output "Generating a basic serverconfig.php"
     output ""
     # make config file
-sudo nano /var/web/serverconfig.php
+echo '
 <?php
 ini_set('"'"'date.timezone'"'"', '"'"'UTC'"'"');
 define('"'"'YAAMP_LOGS'"'"', '"'"'/var/log'"'"');
@@ -608,6 +611,8 @@ $configCustomPorts = array(
 $configAlgoNormCoef = array(
 #	'"'"'neo'"'"' => 5.0,
 );
+
+' | /Var/web/serverconfig.php
 
 output "Updating stratum config files with database connection info."
 output ""
