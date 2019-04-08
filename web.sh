@@ -252,9 +252,10 @@ sudo chmod +x /var/stratum/config/run.sh
       sudo mkdir -p /var/www/$server_name/html  
     output "Creating webserver initial config file"
     output ""
-echo 'include /etc/nginx/blockuseragents.rules;
+    	nano /etc/nginx/sites-available/$server_name.conf;
+echo 'include /etc/nginx/useragents.rules;
 	server {
-	if ($blockedagent) {
+	if ($fuckingagent) {
                 return 403;
         }
         if ($request_method !~ ^(GET|HEAD|POST)$) {
@@ -328,7 +329,6 @@ echo 'include /etc/nginx/blockuseragents.rules;
   	}
  }
  }
-' | sudo -E tee /etc/nginx/sites-available/$server_name.conf >/dev/null 2>&1
 
 sudo ln -s /etc/nginx/sites-available/$server_name.conf /etc/nginx/sites-enabled/$server_name.conf
 sudo ln -s /var/web /var/www/$server_name/html
@@ -340,9 +340,10 @@ sudo service nginx restart
     sudo rm /etc/nginx/sites-available/$server_name.conf
     sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
     # I am SSL Man!
-echo 'include /etc/nginx/blockuseragents.rules;
+    	sudo nano /etc/nginx/sites-available/$server_name.conf
+echo 'include /etc/nginx/useragents.rules;
 	server {
-	if ($blockedagent) {
+	if ($fuckingagent) {
                 return 403;
         }
         if ($request_method !~ ^(GET|HEAD|POST)$) {
@@ -444,7 +445,6 @@ echo 'include /etc/nginx/blockuseragents.rules;
  }
  }
         
-' | sudo -E tee /etc/nginx/sites-available/$server_name.conf >/dev/null 2>&1
 	fi
 sudo service nginx restart
 sudo service php7.0-fpm reload
@@ -464,7 +464,7 @@ sudo service php7.0-fpm reload
     
     #Create my.cnf
     
- echo '
+sudo nano ~/.my.cnf
 [clienthost1]
 user=panel
 password='"${password}"'
@@ -478,11 +478,10 @@ host=localhost
 [mysql]
 user=root
 password='"${rootpasswd}"'
-' | sudo -E tee ~/.my.cnf >/dev/null 2>&1
-      sudo chmod 0600 ~/.my.cnf
+sudo chmod 0600 ~/.my.cnf
 
 #Create keys file
-  echo '  
+sudo nano  /etc/yiimp/keys.php
     <?php
 /* Sample config file to put in /etc/yiimp/keys.php */
 define('"'"'YIIMP_MYSQLDUMP_USER'"'"', '"'"'panel'"'"');
@@ -502,12 +501,12 @@ define('"'"'EXCH_LIVECOIN_SECRET'"'"', '"'"''"'"');
 define('"'"'EXCH_NOVA_SECRET'"'"','"'"''"'"');
 define('"'"'EXCH_POLONIEX_SECRET'"'"', '"'"''"'"');
 define('"'"'EXCH_YOBIT_SECRET'"'"', '"'"''"'"');
-' | sudo -E tee /etc/yiimp/keys.php >/dev/null 2>&1
+
  
 
     output "Database 'yiimpfrontend' and users 'panel' and 'stratum' created with password $password and $password2, will be saved for you"
     output ""
-    output "BTC Donation: 1HUruZMcSben39E27cyLwsTrk6bbWZs3po"
+    output "BTC Donation: 199Ki8SmeY8B8PSh1uvUA1oNyRdwcbcGwW"
     output ""
     
     output "Peforming the SQL import"
@@ -645,4 +644,4 @@ output "Please make sure to change your wallet addresses in the /var/web/serverc
 output ""
 output "Please make sure to add your public and private keys."
 output ""
-output "If you found this script helpful please consider donating some BTC Donation: 1HUruZMcSben39E27cyLwsTrk6bbWZs3po "
+output "If you found this script helpful please consider donating some BTC Donation: 199Ki8SmeY8B8PSh1uvUA1oNyRdwcbcGwW "
