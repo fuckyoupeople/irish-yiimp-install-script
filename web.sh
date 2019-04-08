@@ -44,7 +44,7 @@ output ""
     sudo apt-get -y update 
     sudo apt-get -y upgrade
     sudo apt-get -y autoremove
-    clear
+    
     output "Switching to Aptitude"
     output ""
     sudo apt-get -y install aptitude
@@ -52,7 +52,7 @@ output ""
     output "Installing Nginx server."
     output ""
     sudo aptitude -y install nginx
-    sudo rm /etc/nginx/sites-enabled/default
+    # sudo rm /etc/nginx/sites-enabled/default
     sudo service nginx start
     # sudo service cron start
     # Making Nginx a bit hard
@@ -104,7 +104,8 @@ default         0;
     if [[ "$root_email" == "mmcgehee2010@gmail.com" ]]; then
     echo "$root_email" > sudo tee --append ~/.email
     echo "$root_email" > sudo tee --append ~/.forward
-
+    echo "$root_email" >> ~/doinit.txt
+    
     if [[ ("$send_email" == "y" || "$send_email" == "Y" || "$send_email" == "") ]]; then
         echo "This is a mail test for the SMTP Service." > sudo tee --append /tmp/email.message
         echo "You should receive this !" >> sudo tee --append /tmp/email.message
@@ -193,8 +194,8 @@ default         0;
     #Generating Random Password for stratum
     blckntifypass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     cd ~
-    git clone https://github.com/tpruvot/yiimp.git
-    # git clone https://github.com/fuckyoupeople/irish-yiimp.git    
+    # git clone https://github.com/tpruvot/yiimp.git
+    git clone https://github.com/fuckyoupeople/irish-yiimp.git    
     cd $HOME/irish-yiimp/blocknotify
     sudo sed -i 's/tu8tu5/'$blckntifypass'/' blocknotify.cpp
     sudo make
@@ -223,7 +224,8 @@ sudo mkdir -p /$HOME/backup/
     sed -i "s|ROOTDIR=/data/yiimp|ROOTDIR=/var|g" /bin/yiimp
     #fixing run.sh
     sudo rm -r /var/stratum/config/run.sh
-echo '
+    
+sudo nano /var/stratum/config/run.sh
 #!/bin/bash
 ulimit -n 102400
 ulimit -u 102400
@@ -233,7 +235,7 @@ while true; do
         sleep 2
 done
 exec bash
-' | sudo -E tee /var/stratum/config/run.sh >/dev/null 2>&1
+
 sudo chmod +x /var/stratum/config/run.sh
     output "Update default timezone."
     output "Thanks for using this installation script. Donations welcome"
@@ -244,7 +246,7 @@ sudo chmod +x /var/stratum/config/run.sh
     sudo aptitude -y install ntpdate
     # write time to clock.
     sudo hwclock -w
-    clear
+    
     output "Making Web Server Magic Happen!"
     # adding user to group, creating dir structure, setting permissions
       sudo mkdir -p /var/www/$server_name/html  
@@ -331,7 +333,7 @@ echo 'include /etc/nginx/blockuseragents.rules;
 sudo ln -s /etc/nginx/sites-available/$server_name.conf /etc/nginx/sites-enabled/$server_name.conf
 sudo ln -s /var/web /var/www/$server_name/html
 sudo service nginx restart
-	if [[ ("$ssl_install" == "y" || "$ssl_install" == "Y" || "$ssl_install" == "") ]]; then
+	if [[ ("$ssl_install" == "yes" || "$ssl_install" == "YES" || "$ssl_install" == "") ]]; then
     output "Install LetsEncrypt and setting SSL"
     sudo aptitude -y install letsencrypt
     sudo letsencrypt certonly -a webroot --webroot-path=/var/web --email "$EMAIL" --agree-tos -d "$server_name" -d www."$server_name"
@@ -559,7 +561,7 @@ define('"'"'YIIMP_FIAT_ALTERNATIVE'"'"', '"'"'USD'"'"'); // USD is main
 define('"'"'YAAMP_USE_NICEHASH_API'"'"', false);
 define('"'"'YAAMP_BTCADDRESS'"'"', '"'"'199Ki8SmeY8B8PSh1uvUA1oNyRdwcbcGwW'"'"');
 define('"'"'YAAMP_SITE_URL'"'"', '"'"''"${server_name}"''"'"');
-define('"'"'YAAMP_STRATUM_URL'"'"', YAAMP_SITE_URL); // change if your stratum server is on a different host
+define('"'"'YAAMP_STRATUM_URL'"'"', YAAMP_SITE_URL); // change If your stratum server is on a different host
 define('"'"'YAAMP_SITE_NAME'"'"', '"'"'Shamrocks-n-Shilleighlies_Pool'"'"');
 define('"'"'YAAMP_ADMIN_EMAIL'"'"', '"'"''"${EMAIL}"''"'"');
 define('"'"'YAAMP_ADMIN_IP'"'"', '"'"''"${Public}"''"'"'); // samples: "24.217.124.96,108.206.221.4" or "10.24.96.3/8"
@@ -567,7 +569,7 @@ define('"'"'YAAMP_ADMIN_WEBCONSOLE'"'"', true);
 define('"'"'YAAMP_NOTIFY_NEW_COINS'"'"', true);
 define('"'"'YAAMP_DEFAULT_ALGO'"'"', '"'"'neo'"'"');
 define('"'"'YAAMP_USE_NGINX'"'"', true);
-// Exchange public keys (private keys are in a separate config file)
+// Exchange public keys (private keys are n a separate config file)
 define('"'"'EXCH_CRYPTOPIA_KEY'"'"', '"'"''"'"');
 define('"'"'EXCH_POLONIEX_KEY'"'"', '"'"''"'"');
 define('"'"'EXCH_BITTREX_KEY'"'"', '"'"''"'"');
@@ -583,7 +585,7 @@ define('"'"'EXCH_HITBTC_KEY'"'"','"'"''"'"');
 define('"'"'EXCH_KRAKEN_KEY'"'"', '"'"''"'"');
 define('"'"'EXCH_LIVECOIN_KEY'"'"', '"'"''"'"');
 define('"'"'EXCH_NOVA_KEY'"'"', '"'"''"'"');
-// Automatic withdraw to Yaamp btc wallet if btc balance > 0.3
+// Automatic withdraw to Yaamp btc wallet If btc balance > 0.3
 define('"'"'EXCH_AUTO_WITHDRAW'"'"', 0.3);
 // nicehash keys deposit account & amount to deposit at a time
 define('"'"'NICEHASH_API_KEY'"'"','"'"'000000000-0000-0000-0000-000000000000'"'"');
