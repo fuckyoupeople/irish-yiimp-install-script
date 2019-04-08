@@ -56,8 +56,8 @@ output ""
     sudo service nginx start
     # sudo service cron start
     # Making Nginx a bit hard
-    sudo nano /etc/nginx/useragent.rules
-    map $http_user_agent $fuckingagent {
+    
+   echo ' map $http_user_agent $fuckingagent {
 default         0;
 ~*malicious     1;
 ~*bot           1;
@@ -66,7 +66,7 @@ default         0;
 ~*webbandit     1;
 ~*bandit	1;
 ~*crawler	1; 
-}
+} > /etc/nginx/useragent.rules
         
     output "Installing Mariadb Server."
     output ""
